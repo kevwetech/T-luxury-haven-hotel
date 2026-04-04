@@ -1,0 +1,18 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Delete Testimonial — Dashboard{% endblock %}
+{% block page_title %}Delete Testimonial{% endblock %}
+{% block content %}
+<div class="d-ph"><div><h1>Delete Testimonial</h1><p>This action cannot be undone.</p></div></div>
+<div class="d-dc">
+  <div class="d-dprev">
+    <div class="d-dav">{% if testimonial.photo %}<img src="{{ testimonial.photo.url }}" alt="{{ testimonial.name }}" />{% else %}{{ testimonial.name|first }}{% endif %}</div>
+    <div><p class="d-dname">{{ testimonial.name }}</p><p class="d-dsub">{{ testimonial.location }}</p></div>
+  </div>
+  <p class="d-dbody">Are you sure you want to delete the testimonial from <strong>{{ testimonial.name }}</strong>?</p>
+  <p class="d-dwarn">⚠️ This review will be permanently removed from the homepage.</p>
+  <div class="d-fbtns">
+    <form method="POST">{% csrf_token %}<button type="submit" class="d-btn btn-delete" style="padding:0.75rem 2rem;font-size:0.88rem;">Yes, Delete</button></form>
+    <a href="{% url 'dashboard_testimonials' %}" class="d-btn btn-outline" style="padding:0.75rem 1.5rem;font-size:0.88rem;">Cancel</a>
+  </div>
+</div>
+{% endblock %}

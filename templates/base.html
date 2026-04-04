@@ -1,0 +1,140 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}T-Luxury Haven Hotel{% endblock %}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,800;1,400;1,700&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+</head>
+<body>
+
+  <nav>
+    <div class="logo">
+      <img src="{% static 'img/t-luxurylogo.jpeg' %}"alt="Logo">
+    </div>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="{% url 'about' %}">About</a></li>
+      <li><a href="{% url 'rooms' %}">Rooms</a></li>
+      <li><a href="{% url 'gallery' %}">Gallery</a></li>
+      <li><a href="{% url 'contact' %}">Contact</a></li>
+      {% if user.is_authenticated %}
+        <li><a href="{% url 'my_bookings' %}">My Bookings</a></li>
+      {% endif %}
+    </ul>
+
+    <div class="nav-right">
+      {% if user.is_authenticated %}
+        <span class="nav-user">{{ user.username }}</span>
+        <a href="{% url 'logout' %}" class="nav-login">Log Out</a>
+      {% else %}
+        <a href="{% url 'login' %}" class="nav-login">→ Log In</a>
+        <a href="{% url 'register' %}" class="btn-nav">Book Now</a>
+      {% endif %}
+      <button class="hamburger" id="hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Drawer -->
+<div class="mob-overlay" id="mobOverlay"></div>
+<div class="mob-drawer" id="mobDrawer">
+  <div class="mob-header">
+    <img src="{% static 'img/t-luxurylogo.jpeg' %}"alt="Logo">
+   <button class="mob-close" id="mobClose" aria-label="Close menu">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round">
+    <line x1="18" y1="6" x2="6" y2="18"/>
+    <line x1="6" y1="6" x2="18" y2="18"/>
+  </svg>
+</button>
+  </div>
+  <div class="mob-nav">
+    <a href="/" class="mob-link">Home</a>
+    <a href="{% url 'about' %}" class="mob-link">About</a>
+    <a href="{% url 'rooms' %}" class="mob-link">Rooms</a>
+    <a href="{% url 'gallery' %}" class="mob-link">Gallery</a>
+    <a href="{% url 'contact' %}" class="mob-link">Contact</a>
+    {% if user.is_authenticated %}
+      <a href="{% url 'my_bookings' %}" class="mob-link">My Bookings</a>
+    {% endif %}
+  </div>
+  <div class="mob-footer">
+    {% if user.is_authenticated %}
+      <a href="{% url 'logout' %}" class="mob-login">→ Log Out</a>
+    {% else %}
+      <a href="{% url 'login' %}" class="mob-login">→ Log In</a>
+      <a href="{% url 'register' %}" class="mob-book">Book Now</a>
+    {% endif %}
+  </div>
+</div>
+
+
+  <div class="messages">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+  </div>
+
+  {% block full_content %}
+    <main class="container">
+      {% block content %}{% endblock %}
+    </main>
+  {% endblock %}
+
+  <footer>
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand-name"><img src="{% static 'img/t-luxurylogo.jpeg' %}" alt="Logo"></div>
+        <p class="footer-brand-desc">Where futuristic design meets timeless comfort. An experience beyond the ordinary.</p>
+      </div>
+      <div>
+        <p class="footer-col-title">Explore</p>
+        <ul class="footer-links">
+          <li><a href="/">Home</a></li>
+          <li><a href="{% url 'about' %}">About</a></li>
+          <li><a href="{% url 'rooms' %}">Rooms</a></li>
+          <li><a href="{% url 'gallery' %}">Gallery</a></li>
+          <li><a href="{% url 'contact' %}">Contact</a></li>
+          {% if user.is_authenticated %}
+            <li><a href="{% url 'my_bookings' %}">My Bookings</a></li>
+          {% else %}
+            <li><a href="{% url 'register' %}">Booking</a></li>
+          {% endif %}
+        </ul>
+      </div>
+      <div>
+        <p class="footer-col-title">Rooms</p>
+        <ul class="footer-links">
+          <li><a href="{% url 'rooms' %}">T-Baby</a></li>
+          <li><a href="{% url 'rooms' %}">T-Deluxe</a></li>
+          <li><a href="{% url 'rooms' %}">T-Classic</a></li>
+          <li><a href="{% url 'rooms' %}">T-Premium</a></li>
+          <li><a href="{% url 'rooms' %}">T-Special</a></li>
+          <li><a href="{% url 'rooms' %}">T-Unique</a></li>
+          <li><a href="{% url 'rooms' %}">T-Luxury</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-col-title">Contact</p>
+        <p class="footer-contact-item">Abeke road, by Anegbe-lane</p>
+        <p class="footer-contact-item">Sapele, 331107, Delta</p>
+        <p class="footer-contact-item">+234 706 367 0261</p>
+        <p class="footer-contact-item">tluxuryhaven@gmail.com</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <ul class="footer-bottom-links">
+        <li><a href="#">Privacy</a></li>
+        <li><a href="#">Terms</a></li>
+        <li><a href="#">Careers</a></li>
+      </ul>
+      <p class="footer-copy">&copy; 2026 T-Luxury Haven Hotel. All rights reserved.</p>
+    </div>
+  </footer>
+  <script src="{% static 'js/scripts.js' %}"></script>
+</body>
+</html>

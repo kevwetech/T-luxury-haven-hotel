@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}About Us — T-Luxury Haven Hotel{% endblock %}
+
+{% block full_content %}
+<link rel="stylesheet" href="{% static 'css/about.css' %}" />
+
+<!-- ── HERO ── -->
+<div class="about-hero">
+  <img class="about-hero-img"
+    src="{% static 'img/t-luxury.jpeg' %}" alt="T-Luxury Haven Hotel" />
+  <div class="about-hero-overlay"></div>
+  <div class="about-hero-content">
+    <span class="about-hero-label">Our Story</span>
+    <h1 class="about-hero-title">A Legacy of <span class="gold">Distinction</span></h1>
+  </div>
+</div>
+
+<!-- ── STORY ── -->
+<section class="about-story">
+  <div>
+    <div class="about-eyebrow">
+      <div class="about-eyebrow-line"></div>
+      <span class="about-eyebrow-label">Who We Are</span>
+    </div>
+    <h2 class="about-story-heading">
+      Where Every Detail<br>Tells a <span class="gold">Story</span>
+    </h2>
+    <p class="about-story-body">
+      Founded in 2024, T-Luxury Haven Hotel was born from a singular vision — to create a sanctuary where world-class hospitality meets timeless elegance. Nestled in the heart of the city, our hotel has welcomed guests from over 80 countries.
+    </p>
+    <p class="about-story-body">
+      Every corner of T-Luxury Haven has been thoughtfully designed — from the handcrafted marble lobby to the whisper-soft Egyptian cotton linens — to create moments of pure indulgence that linger long after checkout.
+    </p>
+    <p class="about-story-body">
+      Our dedicated team of over 200 hospitality professionals work tirelessly to anticipate your every need, ensuring each stay is nothing short of extraordinary.
+    </p>
+  </div>
+
+  <div class="about-story-img-wrap">
+    <img class="about-story-img"
+      src="{% static 'img/t-luxury1.jpeg' %}" alt="Hotel Interior" />
+    <div class="about-story-badge">
+      <div class="about-story-badge-year">2024</div>
+      <div class="about-story-badge-label">Year Founded</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── STATS ── -->
+<section class="about-stats">
+  <div class="about-stat-item">
+    <div class="about-stat-num">24+</div>
+    <div class="about-stat-title">Luxury Rooms</div>
+    <div class="about-stat-sub">Beautifully appointed</div>
+  </div>
+  <div class="about-stat-item">
+    <div class="about-stat-num">3★</div>
+    <div class="about-stat-title">Star Rating</div>
+    <div class="about-stat-sub">Internationally recognised</div>
+  </div>
+  <div class="about-stat-item">
+    <div class="about-stat-num">3</div>
+    <div class="about-stat-title">Years</div>
+    <div class="about-stat-sub">Of exceptional service</div>
+  </div>
+</section>
+
+<!-- ── VALUES ── -->
+<section class="about-values">
+  <div class="about-section-header">
+    <span class="about-section-label">What Drives Us</span>
+    <h2 class="about-section-heading">Our Core <span class="gold">Values</span></h2>
+  </div>
+  <div class="about-values-grid">
+    <div class="about-value-card">
+      <span class="about-value-icon">✦</span>
+      <h3 class="about-value-title">Excellence</h3>
+      <p class="about-value-body">We pursue perfection in every detail, from the freshness of our flowers to the precision of our service.</p>
+    </div>
+    <div class="about-value-card">
+      <span class="about-value-icon">❤</span>
+      <h3 class="about-value-title">Warmth</h3>
+      <p class="about-value-body">Every guest is treated as family. We create genuine connections that transform a stay into a lasting memory.</p>
+    </div>
+    <div class="about-value-card">
+      <span class="about-value-icon">🌿</span>
+      <h3 class="about-value-title">Sustainability</h3>
+      <p class="about-value-body">We are committed to responsible luxury — preserving the planet while delivering world-class experiences.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<section class="about-cta">
+  <span class="about-cta-label">Experience It Yourself</span>
+  <h2 class="about-cta-heading">Begin Your <span class="gold">Journey</span></h2>
+  <p class="about-cta-sub">Discover why discerning travellers from around the world choose T-Luxury Haven as their home away from home.</p>
+  <div class="about-cta-btns">
+    <a href="{% url 'rooms' %}" class="btn-primary">Explore Rooms →</a>
+    <a href="{% url 'contact' %}" class="btn-outline">Contact Us</a>
+  </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}{{ action }} Testimonial — Dashboard{% endblock %}
+{% block page_title %}{{ action }} Testimonial{% endblock %}
+{% block content %}
+<div class="d-ph">
+  <div><h1>{{ action }} Testimonial</h1><p>{% if action == 'Add' %}Add a new guest review.{% else %}Update this testimonial.{% endif %}</p></div>
+  <a href="{% url 'dashboard_testimonials' %}" class="d-btn btn-outline">← Back</a>
+</div>
+<div class="d-fc">
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="d-fg-row">
+      <div class="d-fg"><label>Guest Name</label>{{ form.name }}{% if form.name.errors %}<span class="field-error">{{ form.name.errors|join:", " }}</span>{% endif %}</div>
+      <div class="d-fg"><label>Location</label>{{ form.location }}{% if form.location.errors %}<span class="field-error">{{ form.location.errors|join:", " }}</span>{% endif %}</div>
+    </div>
+    <div class="d-fg"><label>Review Quote</label>{{ form.quote }}{% if form.quote.errors %}<span class="field-error">{{ form.quote.errors|join:", " }}</span>{% endif %}</div>
+    <div class="d-fg-row">
+      <div class="d-fg"><label>Rating (1–5)</label>{{ form.rating }}{% if form.rating.errors %}<span class="field-error">{{ form.rating.errors|join:", " }}</span>{% endif %}</div>
+      <div class="d-fg">
+        <label>Guest Photo <span style="color:var(--text-dim);font-weight:300;text-transform:none;letter-spacing:0;">(optional)</span></label>
+        {{ form.photo }}
+        {% if testimonial and testimonial.photo %}<div class="d-iprev"><img src="{{ testimonial.photo.url }}" alt="{{ testimonial.name }}" style="width:60px;height:60px;border-radius:50%;"/><p class="d-inote">Upload new to replace.</p></div>{% endif %}
+        {% if form.photo.errors %}<span class="field-error">{{ form.photo.errors|join:", " }}</span>{% endif %}
+      </div>
+    </div>
+    <div class="d-fg d-fg-inline">{{ form.is_active }}<label>Show this testimonial on the homepage</label></div>
+    <div class="d-fbtns">
+      <button type="submit" class="d-btn btn-gold" style="padding:0.75rem 2rem;font-size:0.88rem;">{{ action }} Testimonial →</button>
+      <a href="{% url 'dashboard_testimonials' %}" class="d-btn btn-outline" style="padding:0.75rem 1.5rem;font-size:0.88rem;">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

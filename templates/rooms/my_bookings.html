@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block title %}My Reservations — T-Luxury Haven Hotel{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <span class="section-label">Guest Portal</span>
+  <h1>My <span class="gold">Reservations</span></h1>
+  <p class="section-sub">Welcome back, {{ user.username }}. Manage your upcoming and past stays.</p>
+</div>
+
+{% if bookings %}
+<div class="bookings-list">
+  {% for booking in bookings %}
+  <div class="booking-card status-{{ booking.status }}">
+    <div class="booking-info">
+      <h3>{{ booking.room.room_type }} — Room {{ booking.room.room_number }}</h3>
+      <div class="booking-dates">
+        <span>Check-in &nbsp;<strong>{{ booking.check_in }}</strong></span>
+        <span>Check-out &nbsp;<strong>{{ booking.check_out }}</strong></span>
+      </div>
+      <div class="booking-meta">
+        <span>{{ booking.guests }} Guest{{ booking.guests|pluralize }}</span>
+        <span>Total &nbsp;<strong class="price">₦{{ booking.total_price|default:"0"|intcomma }}</strong></span>
+        <span>{{ booking.created_at|date:"M d, Y" }}</span>
+      </div>
+    </div>
+    <div class="booking-actions">
+      <span class="status-badge status-{{ booking.status }}">{{ booking.status|capfirst }}</span>
+      {% if booking.status != 'cancelled' %}
+        <a href="{% url 'cancel_booking' booking.pk %}" class="btn-danger"
+           onclick="return confirm('Cancel this reservation?')">Cancel</a>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+  <p>No reservations yet.</p>
+  <a href="{% url 'rooms' %}" class="btn-primary">Explore Our Rooms →</a>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Gallery — T-Luxury Haven Hotel{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/gallery.css' %}" />
+
+<div class="page-header">
+  <span class="section-label">Visual Journey</span>
+  <h1>Our <span class="gold">Gallery</span></h1>
+  <p class="section-sub">A glimpse into the world of T-Luxury Haven — where every space tells a story of elegance.</p>
+</div>
+
+<!-- ── FILTERS ── -->
+<div class="gallery-filters">
+  <a href="{% url 'gallery' %}"
+    class="gallery-filter-btn {% if not active_cat %}active{% endif %}">
+    All
+  </a>
+  {% for value, label in categories %}
+  <a href="?category={{ value }}"
+    class="gallery-filter-btn {% if active_cat == value %}active{% endif %}">
+    {{ label }}
+  </a>
+  {% endfor %}
+</div>
+
+<!-- ── GALLERY GRID ── -->
+{% if images %}
+<div class="gallery-grid">
+  {% for img in images %}
+  <div class="gallery-item">
+    <img class="gallery-item-img" src="{{ img.image.url }}" alt="{{ img.title }}" />
+    {% if img.title %}
+    <div class="gallery-item-caption">
+      <p class="gallery-item-title">{{ img.title }}</p>
+      <p class="gallery-item-cat">{{ img.get_category_display }}</p>
+    </div>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="gallery-empty">
+  <p class="gallery-empty-title">No gallery images yet.</p>
+  <p class="gallery-empty-sub">Add images via the admin panel.</p>
+  <a href="{% url 'rooms' %}" class="btn-primary">Explore Our Rooms →</a>
+</div>
+{% endif %}
+
+{% endblock %}

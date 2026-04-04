@@ -1,0 +1,41 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Testimonials — Dashboard{% endblock %}
+{% block page_title %}Manage Testimonials{% endblock %}
+{% block content %}
+<div class="d-ph">
+  <div><h1>Testimonials</h1><p>Manage guest reviews shown on the homepage.</p></div>
+  <a href="{% url 'dashboard_testimonial_add' %}" class="d-btn btn-gold">+ Add Testimonial</a>
+</div>
+<div class="d-tw">
+  <div class="d-th"><h2>{{ testimonials.count }} Testimonial{{ testimonials.count|pluralize }}</h2></div>
+  <div class="d-ts">
+    <table>
+      <thead><tr><th>Guest</th><th>Location</th><th>Quote</th><th>Rating</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for t in testimonials %}
+        <tr>
+          <td>
+            <div class="tav">
+              {% if t.photo %}<img class="tav-img" src="{{ t.photo.url }}" alt="{{ t.name }}" />{% else %}<div class="tav-init">{{ t.name|first }}</div>{% endif %}
+              <span class="tb">{{ t.name }}</span>
+            </div>
+          </td>
+          <td>{{ t.location|default:"—" }}</td>
+          <td><p class="tt">"{{ t.quote }}"</p></td>
+          <td><span class="tstars">{% for i in "12345" %}{% if forloop.counter <= t.rating %}★{% else %}☆{% endif %}{% endfor %}</span></td>
+          <td>{% if t.is_active %}<span class="ba">Active</span>{% else %}<span class="bi">Inactive</span>{% endif %}</td>
+          <td>
+            <div class="d-actions">
+              <a href="{% url 'dashboard_testimonial_edit' t.pk %}" class="d-btn btn-edit">✎ Edit</a>
+              <a href="{% url 'dashboard_testimonial_delete' t.pk %}" class="d-btn btn-delete">🗑 Delete</a>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" style="text-align:center;padding:3rem;" class="cdim">No testimonials yet. <a href="{% url 'dashboard_testimonial_add' %}" style="color:var(--gold);">Add your first →</a></td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

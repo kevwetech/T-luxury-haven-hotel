@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Register — T-Luxury Haven Hotel{% endblock %}
+
+{% block content %}
+<div class="form-wrap">
+  <div class="form-header">
+    <span class="section-label">Join Us</span>
+    <h1>Create Account</h1>
+    <p class="section-sub">Become a member and enjoy seamless reservations.</p>
+  </div>
+  <form method="POST" class="booking-form">
+    {% csrf_token %}
+    {% for field in form %}
+      <div class="form-group">
+        <label>{{ field.label }}</label>
+        {{ field }}
+        {% if field.help_text %}
+          <small style="color:var(--text-dim); font-size:0.75rem;">{{ field.help_text }}</small>
+        {% endif %}
+        {% if field.errors %}
+          <span class="field-error">{{ field.errors|join:", " }}</span>
+        {% endif %}
+      </div>
+    {% endfor %}
+    <button type="submit" class="btn-primary btn-full">Create Account →</button>
+  </form>
+  <p class="form-footer">Already have an account? <a href="{% url 'login' %}">Sign in</a></p>
+</div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'dashboard/base.html' %}
+{% load humanize %}
+{% block title %}{{ action }} Room — Dashboard{% endblock %}
+{% block page_title %}{{ action }} Room{% endblock %}
+{% block content %}
+<div class="d-ph">
+  <div><h1>{{ action }} Room {% if room %}#{{ room.room_number }}{% endif %}</h1><p>{% if action == 'Add' %}Create a new room listing.{% else %}Update this room's details.{% endif %}</p></div>
+  <a href="{% url 'dashboard_rooms' %}" class="d-btn btn-outline">← Back to Rooms</a>
+</div>
+<div class="d-fc">
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="d-fg-row">
+      <div class="d-fg"><label>Room Number</label>{{ form.room_number }}{% if form.room_number.errors %}<span class="field-error">{{ form.room_number.errors|join:", " }}</span>{% endif %}</div>
+      <div class="d-fg"><label>Room Type</label>{{ form.room_type }}{% if form.room_type.errors %}<span class="field-error">{{ form.room_type.errors|join:", " }}</span>{% endif %}</div>
+    </div>
+    <div class="d-fg"><label>Description</label>{{ form.description }}{% if form.description.errors %}<span class="field-error">{{ form.description.errors|join:", " }}</span>{% endif %}</div>
+    <div class="d-fg-row">
+      <div class="d-fg"><label>Price Per Night (₦)</label>{{ form.price|intcomma }}{% if form.price.errors %}<span class="field-error">{{ form.price.errors|join:", " }}</span>{% endif %}</div>
+      <div class="d-fg"><label>Capacity (guests)</label>{{ form.capacity }}{% if form.capacity.errors %}<span class="field-error">{{ form.capacity.errors|join:", " }}</span>{% endif %}</div>
+    </div>
+    <div class="d-fg">
+      <label>Room Image</label>
+      {{ form.image }}
+      {% if room and room.image %}<div class="d-iprev"><img src="{{ room.image.url }}" alt="Current" style="width:180px;height:120px;"/><p class="d-inote">Current image — upload new to replace.</p></div>{% endif %}
+      {% if form.image.errors %}<span class="field-error">{{ form.image.errors|join:", " }}</span>{% endif %}
+    </div>
+    <div class="d-fg d-fg-inline">{{ form.is_active }}<label>Room is active and visible to guests</label></div>
+    <div class="d-fbtns">
+      <button type="submit" class="d-btn btn-gold" style="padding:0.75rem 2rem;font-size:0.88rem;">{{ action }} Room →</button>
+      <a href="{% url 'dashboard_rooms' %}" class="d-btn btn-outline" style="padding:0.75rem 1.5rem;font-size:0.88rem;">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

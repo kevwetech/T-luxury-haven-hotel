@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block title %}Rooms & Suites — T-Luxury Haven Hotel{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <span class="section-label">Accommodations</span>
+  <h1>Rooms &amp; <span class="gold">Suites</span></h1>
+  <p class="section-sub">Each space is a sanctuary of refined comfort, crafted for the discerning traveller.</p>
+</div>
+
+<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:2.5rem; padding-bottom:1.5rem; border-bottom:1px solid var(--border); flex-wrap:wrap; gap:1rem;">
+  <p style="font-size:0.78rem; letter-spacing:0.15em; color:var(--text-muted); text-transform:uppercase;">
+    {{ rooms|length }} Room{{ rooms|length|pluralize }} Available
+  </p>
+</div>
+
+<div class="rooms-grid">
+  {% for room in rooms %}
+  <div class="room-card">
+    <div class="room-img">
+      {% if room.image %}
+        <img src="{{ room.image.url }}" alt="{{ room.room_type }}" />
+      {% else %}
+        <div class="room-img--placeholder">No Image Available</div>
+      {% endif %}
+      <div class="room-size-badge">Room {{ room.room_number }}</div>
+    </div>
+    <div class="room-body">
+      <span class="room-type">{{ room.room_type }}</span>
+      <h3 class="room-title">{{ room.room_type }}</h3>
+      <p class="room-desc">{{ room.description|truncatewords:20 }}</p>
+      <div class="room-footer">
+        <div class="room-price">₦{{ room.price|intcomma }}<small> / night</small></div>
+        <a href="{% url 'room_detail' room.pk %}" class="room-arrow">Book Now</a>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+    <div class="empty-state" style="grid-column:1/-1;">
+      <p>No rooms available at the moment.</p>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

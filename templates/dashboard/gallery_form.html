@@ -1,0 +1,25 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}{{ action }} Image — Dashboard{% endblock %}
+{% block page_title %}{{ action }} Gallery Image{% endblock %}
+{% block content %}
+<div class="d-ph">
+  <div><h1>{{ action }} Gallery Image</h1><p>{% if action == 'Add' %}Upload a new image.{% else %}Update this image.{% endif %}</p></div>
+  <a href="{% url 'dashboard_gallery' %}" class="d-btn btn-outline">← Back to Gallery</a>
+</div>
+<div class="d-fc">
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="d-fg"><label>Title <span style="color:var(--text-dim);font-weight:300;text-transform:none;letter-spacing:0;">(optional)</span></label>{{ form.title }}{% if form.title.errors %}<span class="field-error">{{ form.title.errors|join:", " }}</span>{% endif %}</div>
+    <div class="d-fg"><label>Image</label>{{ form.image }}{% if form.image.errors %}<span class="field-error">{{ form.image.errors|join:", " }}</span>{% endif %}</div>
+    <div class="d-fg-row">
+      <div class="d-fg"><label>Category</label>{{ form.category }}{% if form.category.errors %}<span class="field-error">{{ form.category.errors|join:", " }}</span>{% endif %}</div>
+      <div class="d-fg"><label>Display Order</label>{{ form.order }}{% if form.order.errors %}<span class="field-error">{{ form.order.errors|join:", " }}</span>{% endif %}</div>
+    </div>
+    <div class="d-fg d-fg-inline">{{ form.is_active }}<label>Image is active and visible in the gallery</label></div>
+    <div class="d-fbtns">
+      <button type="submit" class="d-btn btn-gold" style="padding:0.75rem 2rem;font-size:0.88rem;">{{ action }} Image →</button>
+      <a href="{% url 'dashboard_gallery' %}" class="d-btn btn-outline" style="padding:0.75rem 1.5rem;font-size:0.88rem;">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

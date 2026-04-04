@@ -1,0 +1,32 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Gallery — Dashboard{% endblock %}
+{% block page_title %}Manage Gallery{% endblock %}
+{% block content %}
+<div class="d-ph">
+  <div><h1>Gallery Images</h1><p>Add, view and remove hotel gallery images.</p></div>
+  <a href="{% url 'dashboard_gallery_add' %}" class="d-btn btn-gold">+ Add Image</a>
+</div>
+{% if images %}
+<div class="d-gg">
+  {% for img in images %}
+  <div class="d-gc">
+    <div class="d-gi">
+      <img src="{{ img.image.url }}" alt="{{ img.title }}" />
+      <div class="d-gcat">{{ img.get_category_display }}</div>
+      <div class="d-gst">{% if img.is_active %}<span class="ba">Active</span>{% else %}<span class="bi">Inactive</span>{% endif %}</div>
+    </div>
+    <div class="d-gb">
+      <p class="d-gtitle">{{ img.title|default:"Untitled" }}</p>
+      <p class="d-gorder">Order: {{ img.order }}</p>
+      <form method="POST" action="{% url 'dashboard_gallery_delete' img.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="d-btn btn-delete" style="width:100%;" onclick="return confirm('Delete this image?')">🗑 Delete</button>
+      </form>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="d-empty"><p>No gallery images yet.</p><a href="{% url 'dashboard_gallery_add' %}" class="d-btn btn-gold">+ Add First Image</a></div>
+{% endif %}
+{% endblock %}

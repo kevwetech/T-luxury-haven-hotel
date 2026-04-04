@@ -1,0 +1,114 @@
+/* ── GALLERY PAGE STYLES ── */
+
+.gallery-page { }
+
+/* ── FILTERS ── */
+.gallery-filters {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  margin-bottom: 3rem;
+  flex-wrap: wrap;
+}
+.gallery-filter-btn {
+  padding: 0.5rem 1.3rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  background: transparent;
+}
+.gallery-filter-btn:hover,
+.gallery-filter-btn.active {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: var(--gold-glow);
+}
+
+/* ── MASONRY GRID ── */
+.gallery-grid {
+  columns: 3;
+  column-gap: 1rem;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.gallery-item {
+  break-inside: avoid;
+  margin-bottom: 1rem;
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  transition: border-color 0.3s;
+}
+.gallery-item:hover { border-color: var(--border-gold); }
+.gallery-item-img {
+  width: 100%;
+  display: block;
+  transition: transform 0.5s;
+  filter: brightness(0.9);
+}
+.gallery-item:hover .gallery-item-img {
+  transform: scale(1.04);
+  filter: brightness(1);
+}
+.gallery-item-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem 1.2rem;
+  background: linear-gradient(to top, rgba(13,17,23,0.9), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.gallery-item:hover .gallery-item-caption { opacity: 1; }
+.gallery-item-title {
+  font-size: 0.82rem;
+  color: var(--text);
+  font-weight: 500;
+  margin-bottom: 0.2rem;
+}
+.gallery-item-cat {
+  font-size: 0.7rem;
+  color: var(--gold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ── EMPTY STATE ── */
+.gallery-empty {
+  text-align: center;
+  padding: 6rem 2rem;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+.gallery-empty-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+.gallery-empty-sub {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .gallery-grid { columns: 2; }
+}
+@media (max-width: 640px) {
+  .gallery-grid    { columns: 1; }
+  .gallery-filters { gap: 0.5rem; }
+  .gallery-filter-btn { padding: 0.4rem 0.9rem; font-size: 0.7rem; }
+}

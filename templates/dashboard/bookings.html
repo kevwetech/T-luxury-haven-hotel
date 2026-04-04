@@ -1,0 +1,46 @@
+{% extends 'dashboard/base.html' %}
+{% load humanize %}
+{% block title %}Bookings — T-Luxury Haven Dashboard{% endblock %}
+{% block page_title %}Manage Bookings{% endblock %}
+{% block content %}
+<div class="d-ph"><div><h1>All Bookings</h1><p>View and manage all guest reservations.</p></div></div>
+<div class="d-filters">
+  <a href="{% url 'dashboard_bookings' %}" class="d-f {% if not status %}active{% endif %}">All</a>
+  <a href="?status=pending"   class="d-f {% if status == 'pending' %}active{% endif %}">Pending</a>
+  <a href="?status=confirmed" class="d-f {% if status == 'confirmed' %}active{% endif %}">Confirmed</a>
+  <a href="?status=cancelled" class="d-f {% if status == 'cancelled' %}active{% endif %}">Cancelled</a>
+</div>
+<div class="d-tw">
+  <div class="d-th"><h2>{{ bookings.count }} Booking{{ bookings.count|pluralize }}</h2></div>
+  <div class="d-ts">
+    <table>
+      <thead><tr><th>#</th><th>Guest</th><th>Room</th><th>Check-in</th><th>Check-out</th><th>Guests</th><th>Total</th><th>Booked On</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for b in bookings %}
+        <tr>
+          <td class="tb">{{ b.pk }}</td>
+          <td class="tb">{{ b.user.username }}</td>
+          <td>Room {{ b.room.room_number }}<br><span style="font-size:0.78rem;" class="cdim">{{ b.room.room_type }}</span></td>
+          <td>{{ b.check_in }}</td><td>{{ b.check_out }}</td>
+          <td>{{ b.guests }}</td>
+          <td class="tg">₦{{ b.total_price|default:"0"|intcomma }}</td>
+          <td style="font-size:0.8rem;">{{ b.created_at|date:"M d, Y" }}</td>
+          <td><span class="sbadge {% if b.status == 'pending' %}sb-p{% elif b.status == 'confirmed' %}sb-c{% else %}sb-x{% endif %}">{{ b.status|capfirst }}</span></td>
+          <td>
+            {% if b.status == 'pending' %}
+            <div class="d-actions">
+              <form method="POST" action="{% url 'dashboard_booking_update' b.pk %}">{% csrf_token %}<input type="hidden" name="action" value="confirm"><button type="submit" class="d-btn btn-confirm">✓</button></form>
+              <form method="POST" action="{% url 'dashboard_booking_update' b.pk %}">{% csrf_token %}<input type="hidden" name="action" value="cancel"><button type="submit" class="d-btn btn-cancel">✕</button></form>
+            </div>
+            {% elif b.status == 'confirmed' %}
+            <form method="POST" action="{% url 'dashboard_booking_update' b.pk %}">{% csrf_token %}<input type="hidden" name="action" value="cancel"><button type="submit" class="d-btn btn-cancel">✕ Cancel</button></form>
+            {% else %}<span class="cdim">—</span>{% endif %}
+          </td>
+        </tr>
+        {% empty %}<tr><td colspan="10" style="text-align:center;padding:3rem;" class="cdim">No bookings found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'dashboard/base.html' %}
+{% load humanize %}
+{% block title %}Rooms — T-Luxury Haven Dashboard{% endblock %}
+{% block page_title %}Manage Rooms{% endblock %}
+{% block content %}
+<div class="d-ph">
+  <div><h1>All Rooms</h1><p>Add, edit, or remove hotel rooms.</p></div>
+  <a href="{% url 'dashboard_room_add' %}" class="d-btn btn-gold">+ Add New Room</a>
+</div>
+<div class="d-tw">
+  <div class="d-th"><h2>{{ rooms.count }} Room{{ rooms.count|pluralize }}</h2></div>
+  <div class="d-ts">
+    <table>
+      <thead><tr><th>Room No.</th><th>Type</th><th>Price / Night</th><th>Capacity</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for room in rooms %}
+        <tr>
+          <td class="tb">{{ room.room_number }}</td>
+          <td>{{ room.room_type }}</td>
+          <td class="tg">₦{{ room.price|default:"0"|intcomma }}</td>
+          <td>{{ room.capacity }} guests</td>
+          <td>{% if room.is_active %}<span class="ba">Active</span>{% else %}<span class="bi">Inactive</span>{% endif %}</td>
+          <td>
+            <div class="d-actions">
+              <a href="{% url 'dashboard_room_edit' room.pk %}" class="d-btn btn-edit">✎ Edit</a>
+              <a href="{% url 'dashboard_room_delete' room.pk %}" class="d-btn btn-delete">🗑 Delete</a>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" style="text-align:center;padding:3rem;" class="cdim">No rooms yet. <a href="{% url 'dashboard_room_add' %}" style="color:var(--gold);">Add your first →</a></td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

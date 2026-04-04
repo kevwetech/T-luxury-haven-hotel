@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Login — T-Luxury Haven Hotel{% endblock %}
+
+{% block content %}
+<div class="form-wrap">
+  <div class="form-header">
+    <span class="section-label">Welcome Back</span>
+    <h1>Sign In</h1>
+  </div>
+  <form method="POST" class="booking-form">
+    {% csrf_token %}
+    {% for field in form %}
+      <div class="form-group">
+        <label>{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}
+          <span class="field-error">{{ field.errors|join:", " }}</span>
+        {% endif %}
+      </div>
+    {% endfor %}
+    <button type="submit" class="btn-primary btn-full">Sign In →</button>
+  </form>
+  <p class="form-footer">New to T-Luxury Haven? <a href="{% url 'register' %}">Create an account</a></p>
+</div>
+{% endblock %}

@@ -1,0 +1,310 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load static %}
+{% block title %}T-Luxury Haven Hotel — Luxury Redefined{% endblock %}
+
+{% block full_content %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}" />
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <img class="hero-bg" src="{% static 'img/t-luxury.jpeg' %}" alt="T-Luxury Haven Hotel" />
+  <div class="hero-overlay"></div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <div class="hero-eyebrow-line"></div>
+      <span class="hero-eyebrow-text">Luxury Redefined</span>
+    </div>
+    <span class="hero-title-gold">T-Luxury</span>
+    <span class="hero-title-white">Haven Hotel</span>
+    <p class="hero-sub">Where futuristic design meets timeless comfort. An experience beyond the ordinary.</p>
+    <div class="hero-btns">
+      <a href="{% url 'rooms' %}" class="btn-hero-gold">Explore Rooms</a>
+      <a href="{% url 'about' %}" class="btn-hero-outline">Our Story</a>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <div class="hero-scroll-mouse">
+      <div class="hero-scroll-dot"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ABOUT ── -->
+<section class="home-about">
+  <div class="home-about-text">
+    <div class="home-eyebrow">
+      <div class="home-eyebrow-line"></div>
+      <span class="home-eyebrow-label">Our Story</span>
+    </div>
+    <h2 class="home-about-heading">
+      A Legacy of<br><span class="gold">Distinction</span>
+    </h2>
+    <p class="home-about-body">
+      Nestled in the heart of the city, T-Luxury Haven Hotel redefines the art of hospitality. Every detail — from the handcrafted marble lobby to the whisper-soft linens — has been curated to create moments of pure indulgence.
+    </p>
+    <p class="home-about-body">
+      With world-class dining, an award-winning spa, and panoramic views that steal your breath, we invite you to experience a stay that transcends the ordinary.
+    </p>
+    <a href="{% url 'about' %}" class="home-about-link">Read Our Story →</a>
+  </div>
+
+  <div class="home-stats-grid">
+    <div class="home-stat-card">
+      <div class="home-stat-num">{{ total_rooms }}24+</div>
+      <div class="home-stat-label">Luxury Rooms</div>
+    </div>
+    <div class="home-stat-card">
+      <div class="home-stat-num">3★</div>
+      <div class="home-stat-label">Star Rating</div>
+    </div>
+    <div class="home-stat-card">
+      <div class="home-stat-num">3</div>
+      <div class="home-stat-label">Years</div>
+    </div>
+  </div>
+</section>
+<!-- ── SERVICES ── -->
+<section class="home-services">
+  <div class="home-section-header">
+    <div class="home-section-eyebrow">
+      <div class="home-section-eyebrow-line"></div>
+      <span class="home-section-eyebrow-text">What We Offer</span>
+      <div class="home-section-eyebrow-line"></div>
+    </div>
+    <h2 class="home-section-heading">Our <span class="gold">Services</span></h2>
+  </div>
+
+  <div class="home-services-grid">
+
+    <div class="home-service-card">
+      <div class="home-service-icon">📶</div>
+      <h3 class="home-service-title">Free WiFi</h3>
+      <p class="home-service-body">Stay connected with fast and reliable internet access throughout your stay.</p>
+    </div>
+
+    <div class="home-service-card">
+      <div class="home-service-icon">⚡</div>
+      <h3 class="home-service-title">24/7 Power Supply</h3>
+      <p class="home-service-body">Enjoy uninterrupted electricity for maximum comfort at all times.</p>
+    </div>
+
+    <div class="home-service-card">
+      <div class="home-service-icon">❄️</div>
+      <h3 class="home-service-title">Air-Conditioned Rooms</h3>
+      <p class="home-service-body">Relax in well-cooled rooms designed for your comfort.</p>
+    </div>
+
+    <div class="home-service-card">
+      <div class="home-service-icon">🍽️</div>
+      <h3 class="home-service-title">Room Service</h3>
+      <p class="home-service-body">Get meals and essentials delivered directly to your room.</p>
+    </div>
+    <div class="home-service-card">
+      <div class="home-service-icon">🧹</div>
+      <h3 class="home-service-title">Daily Housekeeping</h3>
+      <p class="home-service-body">Clean, fresh, and well-maintained rooms every day.</p>
+    </div>
+
+    <div class="home-service-card">
+      <div class="home-service-icon">🛡️</div>
+      <h3 class="home-service-title">24/7 Security</h3>
+      <p class="home-service-body">Your safety is our priority with round-the-clock security.</p>
+    </div>
+
+    <div class="home-service-card">
+      <div class="home-service-icon">🛎️</div>
+      <h3 class="home-service-title">Reception Support</h3>
+      <p class="home-service-body">Our front desk is always available to assist you.</p>
+    </div>
+
+    <div class="home-service-card">
+      <div class="home-service-icon">🧺</div>
+      <h3 class="home-service-title">Butler Service</h3>
+      <p class="home-service-body">Experience the pinnacle of personalised hospitality with our dedicated in-room butler service for suite guests.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── ROOMS ── -->
+<section class="home-rooms">
+  <div class="home-section-header">
+    <div class="home-section-eyebrow">
+      <div class="home-section-eyebrow-line"></div>
+      <span class="home-section-eyebrow-text">Accommodations</span>
+      <div class="home-section-eyebrow-line"></div>
+    </div>
+    <h2 class="home-section-heading">Rooms &amp; <span class="gold">Suites</span></h2>
+  </div>
+
+  <div class="home-rooms-grid">
+    {% for room in rooms %}
+    <div class="home-room-card">
+      <div class="home-room-img-wrap">
+        {% if room.image %}
+          <img src="{{ room.image.url }}" alt="{{ room.room_type }}" />
+        {% else %}
+          <div class="home-room-no-img">No Image Available</div>
+        {% endif %}
+        <div class="home-room-badge">Room {{ room.room_number }}</div>
+      </div>
+      <div class="home-room-body">
+        <h3 class="home-room-title">{{ room.room_type }}</h3>
+        <p class="home-room-desc">{{ room.description|truncatewords:18 }}</p>
+        <div class="home-room-footer">
+          <div class="home-room-price">₦{{ room.price|intcomma }}<small> / night</small></div>
+          <a href="{% url 'room_detail' room.pk %}" class="home-room-arrow">Book Now</a>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <p class="home-rooms-empty">No rooms available yet.</p>
+    {% endfor %}
+  </div>
+
+  <div class="home-section-cta">
+    <a href="{% url 'rooms' %}">View All Rooms →</a>
+  </div>
+</section>
+
+<!-- ── GALLERY PREVIEW ── -->
+<section class="home-gallery">
+  <div class="home-section-header">
+    <div class="home-section-eyebrow">
+      <div class="home-section-eyebrow-line"></div>
+      <span class="home-section-eyebrow-text">Visual Journey</span>
+      <div class="home-section-eyebrow-line"></div>
+    </div>
+    <h2 class="home-section-heading">Our <span class="gold">Gallery</span></h2>
+  </div>
+
+  <div class="home-gallery-grid">
+    <div class="home-gallery-item home-gallery-item--wide-top">
+      <img src="{% static 'img/t-luxury7.jpeg' %}" alt="Hotel Room" />
+    </div>
+    <div class="home-gallery-item">
+      <img src="{% static 'img/t-luxury3.jpeg' %}" alt="Hotel Pool" />
+    </div>
+    <div class="home-gallery-item">
+      <img src="{% static 'img/t-luxury6.jpeg' %}" alt="Hotel Spa" />
+    </div>
+    <div class="home-gallery-item">
+      <img src="{% static 'img/t-luxury4.jpeg' %}" alt="Hotel Dining" />
+    </div>
+    <div class="home-gallery-item">
+      <img src="{% static 'img/t-luxury.jpeg' %}" alt="Hotel Lounge" />
+    </div>
+    <div class="home-gallery-item home-gallery-item--wide-bot">
+      <img src="{% static 'img/t-luxury5.jpeg' %}" alt="Hotel Exterior" />
+    </div>
+  </div>
+
+  <div class="home-section-cta">
+    <a href="{% url 'gallery' %}">View Full Gallery →</a>
+  </div>
+</section>
+
+<!-- ── TESTIMONIALS ── -->
+<section class="home-testimonials">
+  <div class="home-section-header">
+    <div class="home-section-eyebrow">
+      <div class="home-section-eyebrow-line"></div>
+      <span class="home-section-eyebrow-text">Guest Experiences</span>
+      <div class="home-section-eyebrow-line"></div>
+    </div>
+    <h2 class="home-section-heading">What Our Guests <span class="gold">Say</span></h2>
+  </div>
+
+  <div class="home-testimonials-grid">
+    {% for t in testimonials %}
+    <div class="testimonial-card">
+      <div class="testimonial-stars">
+        {% for i in "12345" %}{% if forloop.counter <= t.rating %}★{% else %}☆{% endif %}{% endfor %}
+      </div>
+      <p class="testimonial-quote">"{{ t.quote }}"</p>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar">
+          {% if t.photo %}<img src="{{ t.photo.url }}" alt="{{ t.name }}" />{% else %}{{ t.name|first }}{% endif %}
+        </div>
+        <div>
+          <p class="testimonial-name">{{ t.name }}</p>
+          <p class="testimonial-location">{{ t.location }}</p>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="testimonial-card">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-quote">"An absolutely transcendent experience. The attention to detail is unmatched — from the personalised welcome note to the perfectly curated pillow menu."</p>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar">S</div>
+        <div><p class="testimonial-name">Sarah Mitchell</p><p class="testimonial-location">New York, USA</p></div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-quote">"T-Luxury Haven sets a new standard for luxury hospitality. The suite was magnificent, and the staff anticipated our every need effortlessly."</p>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar">J</div>
+        <div><p class="testimonial-name">James Harrington</p><p class="testimonial-location">London, UK</p></div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-quote">"We celebrated our anniversary here and it was nothing short of magical. The views, the spa, the dining — all extraordinary."</p>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar">A</div>
+        <div><p class="testimonial-name">Amara Osei</p><p class="testimonial-location">Accra, Ghana</p></div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- ── CONTACT CTA ── -->
+<section class="home-contact">
+  <div class="home-contact-info">
+    <div class="home-eyebrow">
+      <div class="home-eyebrow-line"></div>
+      <span class="home-eyebrow-label">Get In Touch</span>
+    </div>
+    <h2 class="home-about-heading">
+      Let Us Make Your <span class="gold">Stay Unforgettable</span>
+    </h2>
+    <p class="home-about-body">
+      Our concierge team is available around the clock to assist with reservations, special requests, and anything else that will make your visit extraordinary.
+    </p>
+    <div class="home-contact-details">
+      <div class="home-contact-detail">
+        <span class="home-contact-detail-icon">📞</span>
+        <span class="home-contact-detail-text">+234 706 367 0261</span>
+      </div>
+      <div class="home-contact-detail">
+        <span class="home-contact-detail-icon">✉</span>
+        <span class="home-contact-detail-text">tluxuryhaven@gmail.com</span>
+      </div>
+      <div class="home-contact-detail">
+        <span class="home-contact-detail-icon">📍</span>
+        <span class="home-contact-detail-text">Abeke road, by Anegbe-lane Sapele, 331107, Delta State</span>
+      </div>
+    </div>
+    <a href="{% url 'contact' %}" class="btn-primary">Contact Us →</a>
+  </div>
+
+  <div class="home-contact-form-card">
+    <h3 class="home-contact-form-title">Quick <span class="gold">Enquiry</span></h3>
+    <form class="home-contact-form" method="POST" action="{% url 'contact' %}">
+      {% csrf_token %}
+      <input class="home-contact-input" type="text" name="name" placeholder="Your Name" required />
+      <input class="home-contact-input" type="email" name="email" placeholder="Email Address" required />
+      <textarea class="home-contact-input home-contact-textarea" name="message" rows="4" placeholder="How can we assist you?" required></textarea>
+      <button type="submit" class="btn-primary">Send Message →</button>
+    </form>
+  </div>
+</section>
+<script src="{% static 'js/scripts.js' %}"></script>
+
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Contact Us — T-Luxury Haven Hotel{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/contact.css' %}" />
+
+<div class="page-header">
+  <span class="section-label">Get In Touch</span>
+  <h1>Contact <span class="gold">Us</span></h1>
+  <p class="section-sub">Our concierge team is available 24/7 to assist with reservations and any special requests.</p>
+</div>
+
+<div class="contact-layout">
+
+  <!-- ── INFO ── -->
+  <div>
+    <h2 class="contact-info-heading">Reach <span class="gold">Us</span></h2>
+
+    <div class="contact-details">
+
+      <div class="contact-detail">
+        <div class="contact-detail-icon">📍</div>
+        <div>
+          <p class="contact-detail-label">Address</p>
+          <p class="contact-detail-value">
+            123 Luxury Avenue<br>
+            Manhattan, NY 10001<br>
+            United States
+          </p>
+        </div>
+      </div>
+
+      <div class="contact-detail">
+        <div class="contact-detail-icon">📞</div>
+        <div>
+          <p class="contact-detail-label">Phone</p>
+          <p class="contact-detail-value">+1 (555) 123-4567</p>
+          <p class="contact-detail-note">Available 24/7</p>
+        </div>
+      </div>
+
+      <div class="contact-detail">
+        <div class="contact-detail-icon">✉</div>
+        <div>
+          <p class="contact-detail-label">Email</p>
+          <p class="contact-detail-value">reservations@tluxury.com</p>
+          <p class="contact-detail-note">We reply within 2 hours</p>
+        </div>
+      </div>
+
+      <div class="contact-detail">
+        <div class="contact-detail-icon">🕐</div>
+        <div>
+          <p class="contact-detail-label">Check-in / Check-out</p>
+          <p class="contact-detail-value">Check-in: 3:00 PM</p>
+          <p class="contact-detail-value">Check-out: 12:00 PM</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="contact-map">Map — 123 Luxury Avenue, Manhattan</div>
+  </div>
+
+  <!-- ── FORM ── -->
+  <div>
+    <h2 class="contact-form-heading">Send a <span class="gold">Message</span></h2>
+
+    <form class="contact-form" method="POST">
+      {% csrf_token %}
+
+      <div class="contact-form-group">
+        <label class="contact-form-label">Full Name</label>
+        <input class="contact-input" type="text" name="name"
+          placeholder="John Smith" required />
+      </div>
+
+      <div class="contact-form-group">
+        <label class="contact-form-label">Email Address</label>
+        <input class="contact-input" type="email" name="email"
+          placeholder="john@example.com" required />
+      </div>
+
+      <div class="contact-form-group">
+        <label class="contact-form-label">Subject</label>
+        <select class="contact-select" name="subject">
+          <option value="reservation">Reservation Enquiry</option>
+          <option value="special">Special Request</option>
+          <option value="feedback">Feedback</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+
+      <div class="contact-form-group">
+        <label class="contact-form-label">Message</label>
+        <textarea class="contact-textarea" name="message" rows="5"
+          placeholder="How can we assist you?" required></textarea>
+      </div>
+
+      <button type="submit" class="btn-primary">Send Message →</button>
+    </form>
+  </div>
+
+</div>
+
+{% endblock %}

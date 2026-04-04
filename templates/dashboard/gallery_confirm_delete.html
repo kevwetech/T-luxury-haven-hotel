@@ -1,0 +1,43 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Delete Image — T-Luxury Haven Dashboard{% endblock %}
+{% block page_title %}Delete Gallery Image{% endblock %}
+
+{% block content %}
+
+<div class="dash-page-header">
+  <div>
+    <h1>Delete Image</h1>
+    <p>This action cannot be undone.</p>
+  </div>
+</div>
+
+<div class="dash-delete-card">
+  {% if image.image %}
+  <div class="dash-delete-preview">
+    <img src="{{ image.image.url }}" alt="{{ image.title }}" style="width:140px; height:100px;" />
+    <div>
+      <p class="dash-delete-preview-name">{{ image.title|default:"Untitled Image" }}</p>
+      <p class="dash-delete-preview-sub">{{ image.get_category_display }}</p>
+    </div>
+  </div>
+  {% endif %}
+
+  <p class="dash-delete-body">
+    Are you sure you want to delete <strong>{{ image.title|default:"this image" }}</strong>?
+  </p>
+  <p class="dash-delete-warning">⚠️ This will permanently remove the image from the gallery.</p>
+
+  <div class="dash-form-btns">
+    <form method="POST">
+      {% csrf_token %}
+      <button type="submit" class="dash-btn dash-btn-delete" style="padding:0.75rem 2rem; font-size:0.88rem;">
+        Yes, Delete Image
+      </button>
+    </form>
+    <a href="{% url 'dashboard_gallery' %}" class="dash-btn dash-btn-outline" style="padding:0.75rem 1.5rem; font-size:0.88rem;">
+      Cancel
+    </a>
+  </div>
+</div>
+
+{% endblock %}

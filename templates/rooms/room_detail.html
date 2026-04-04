@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block title %}{{ room.room_type }} — T-Luxury Haven Hotel{% endblock %}
+
+{% block full_content %}
+
+{% if room.image %}
+<div class="detail-hero">
+  <img src="{{ room.image.url }}" alt="{{ room.room_type }}" />
+  <div class="detail-hero-overlay"></div>
+  <div class="detail-hero-content">
+    <span class="section-label">{{ room.room_type }}</span>
+    <h1>Room {{ room.room_number }}</h1>
+  </div>
+</div>
+{% endif %}
+
+<main class="container" style="padding-top:{% if room.image %}2rem{% else %}8rem{% endif %};">
+  {% if not room.image %}
+  <div class="page-header">
+    <span class="section-label">{{ room.room_type }}</span>
+    <h1>Room {{ room.room_number }}</h1>
+  </div>
+  {% endif %}
+
+  <div class="detail-body">
+    <div>
+      <p class="detail-desc">{{ room.description }}</p>
+      <div class="detail-meta">
+        <div class="meta-item">
+          <span class="meta-label">Price Per Night</span>
+          <span class="meta-value">₦{{ room.price|intcomma }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Max Guests</span>
+          <span class="meta-value">{{ room.capacity }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Room Type</span>
+          <span class="meta-value">{{ room.room_type }}</span>
+        </div>
+      </div>
+      <a href="{% url 'rooms' %}" class="btn-outline">← Back to Rooms</a>
+    </div>
+
+    <div class="booking-sidebar">
+      <div class="sidebar-price">
+        <div class="amount">₦{{ room.price|intcomma }}</div>
+        <div class="per-night">per night</div>
+      </div>
+      <span class="section-label" style="display:block; margin-bottom:0.8rem;">Reserve This Room</span>
+      <p class="sidebar-note">
+        Experience unrivalled luxury. Book now to secure your stay at T-Luxury Haven Hotel.
+      </p>
+      {% if user.is_authenticated %}
+        <a href="{% url 'book_room' room.pk %}" class="btn-primary btn-full">Reserve Now →</a>
+      {% else %}
+        <a href="{% url 'login' %}?next={% url 'book_room' room.pk %}" class="btn-primary btn-full">Login to Reserve →</a>
+      {% endif %}
+    </div>
+  </div>
+</main>
+
+{% endblock %}
