@@ -2,11 +2,17 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.core.mail import send_mail
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .models import EmailVerificationToken
 from django.template.loader import render_to_string
 from .forms import CustomUserCreationForm
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from rooms.models import Booking
+from django.conf import settings
+from django.db.models import Sum
 
 
 
@@ -73,4 +79,32 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('home')
+    return redirect('login')
+
+
+
+@login_required
+def profile(request):
+    if request.method == 'POST':
+        user            = request.user
+        user.first_name = request.POST.get('first_name', '').strip()
+        user.last_name  = request.POST.get('last_name', '').strip()
+        user.email      = request.POST.get('email', '').strip()
+        user.save()
+        messages.success(request, 'Profile updated successfully.')
+        return redirect('profile')
+ 
+    bookings          = Booking.objects.filter(user=request.user).order_by('-created_at')
+    total_bookings    = bookings.count()
+    confirmed_bookings= bookings.filter(status='confirmed').count()
+    total_spent       = bookings.filter(status='confirmed').aggregate(
+                          total=Sum('total_price'))['total'] or 0
+    recent_bookings   = bookings[:5]
+ 
+    return render(request, 'accounts/profile.html', {
+        'total_bookings':     total_bookings,
+        'confirmed_bookings': confirmed_bookings,
+        'total_spent':        total_spent,
+        'recent_bookings':    recent_bookings,
+    })
+ 

@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}My Profile — T-Luxury Haven{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}" />
+
+<div class="page-header">
+  <span class="section-label">Account</span>
+  <h1>My <span class="gold">Profile</span></h1>
+  <p class="section-sub">Manage your account details and view your booking history.</p>
+</div>
+
+<div class="profile-layout">
+
+  <!-- ── SIDEBAR ── -->
+  <div class="profile-sidebar">
+
+    <div class="profile-avatar-card">
+      <div class="profile-avatar">{{ user.username|first|upper }}</div>
+      <p class="profile-username">{{ user.get_full_name|default:user.username }}</p>
+      <p class="profile-email">{{ user.email|default:"No email set" }}</p>
+      <span class="profile-badge">{% if user.is_staff %}Admin{% else %}Guest{% endif %}</span>
+    </div>
+
+    <div class="profile-nav-card">
+      <a href="{% url 'profile' %}" class="profile-nav-link active">
+        <span class="profile-nav-icon">👤</span> Account Details
+      </a>
+      <a href="{% url 'my_bookings' %}" class="profile-nav-link">
+        <span class="profile-nav-icon">📋</span> My Bookings
+      </a>
+      {% if user.is_staff %}
+      <a href="{% url 'dashboard' %}" class="profile-nav-link">
+        <span class="profile-nav-icon">⬛</span> Dashboard
+      </a>
+      {% endif %}
+      <a href="{% url 'logout' %}" class="profile-nav-link">
+        <span class="profile-nav-icon">→</span> Log Out
+      </a>
+    </div>
+
+  </div>
+
+  <!-- ── MAIN ── -->
+  <div class="profile-main">
+
+    <!-- Booking Stats -->
+    <div class="profile-card">
+      <div class="profile-card-header">
+        <h2 class="profile-card-title">Booking Summary</h2>
+      </div>
+      <div class="profile-card-body">
+        <div class="profile-stats">
+          <div class="profile-stat">
+            <div class="profile-stat-val">{{ total_bookings }}</div>
+            <div class="profile-stat-lbl">Total Bookings</div>
+          </div>
+          <div class="profile-stat">
+            <div class="profile-stat-val">{{ confirmed_bookings }}</div>
+            <div class="profile-stat-lbl">Confirmed</div>
+          </div>
+          <div class="profile-stat">
+            <div class="profile-stat-val">${{ total_spent|floatformat:0 }}</div>
+            <div class="profile-stat-lbl">Total Spent</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Profile -->
+    <div class="profile-card">
+      <div class="profile-card-header">
+        <h2 class="profile-card-title">Account Details</h2>
+      </div>
+      <div class="profile-card-body">
+        <form class="profile-form" method="POST">
+          {% csrf_token %}
+          <div class="profile-form-row">
+            <div class="profile-form-group">
+              <label class="profile-form-label">First Name</label>
+              <input class="profile-input" type="text" name="first_name"
+                value="{{ user.first_name }}" placeholder="John" />
+            </div>
+            <div class="profile-form-group">
+              <label class="profile-form-label">Last Name</label>
+              <input class="profile-input" type="text" name="last_name"
+                value="{{ user.last_name }}" placeholder="Smith" />
+            </div>
+          </div>
+          <div class="profile-form-group">
+            <label class="profile-form-label">Email Address</label>
+            <input class="profile-input" type="email" name="email"
+              value="{{ user.email }}" placeholder="john@example.com" />
+          </div>
+          <div class="profile-form-group">
+            <label class="profile-form-label">Username</label>
+            <input class="profile-input" type="text"
+              value="{{ user.username }}" disabled />
+          </div>
+          <div class="profile-form-btns">
+            <button type="submit" class="btn-primary">Save Changes →</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Recent Bookings -->
+    <div class="profile-card">
+      <div class="profile-card-header">
+        <h2 class="profile-card-title">Recent Bookings</h2>
+        <a href="{% url 'my_bookings' %}" class="btn-outline" style="font-size:0.8rem; padding:0.4rem 1rem;">View All</a>
+      </div>
+      <div class="profile-card-body" style="padding:0;">
+        {% if recent_bookings %}
+        <div class="profile-table-wrap">
+          <table class="profile-table">
+            <thead>
+              <tr>
+                <th>Room</th>
+                <th>Check-in</th>
+                <th>Check-out</th>
+                <th>Total</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for booking in recent_bookings %}
+              <tr>
+                <td class="pt-bold">{{ booking.room.room_type }} — #{{ booking.room.room_number }}</td>
+                <td>{{ booking.check_in }}</td>
+                <td>{{ booking.check_out }}</td>
+                <td class="pt-gold">${{ booking.total_price }}</td>
+                <td>
+                  <span class="pt-badge pt-{{ booking.status }}">{{ booking.status|capfirst }}</span>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div class="profile-empty">
+          <p>You haven't made any bookings yet.</p>
+          <a href="{% url 'rooms' %}" class="btn-primary">Explore Rooms →</a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
