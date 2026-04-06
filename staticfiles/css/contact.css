@@ -1,0 +1,138 @@
+/* ── CONTACT PAGE STYLES ── */
+
+/* ── LAYOUT ── */
+.contact-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* ── INFO COLUMN ── */
+.contact-info-heading {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 2rem;
+}
+.contact-info-heading .gold { color: var(--gold); }
+
+.contact-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+.contact-detail {
+  display: flex;
+  gap: 1.2rem;
+  align-items: flex-start;
+}
+.contact-detail-icon {
+  width: 42px;
+  height: 42px;
+  background: var(--gold-glow);
+  border: 1px solid var(--gold-line);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+.contact-detail-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.3rem;
+}
+.contact-detail-value {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-weight: 300;
+  line-height: 1.6;
+}
+.contact-detail-note {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  margin-top: 0.2rem;
+}
+
+.contact-map {
+  width: 100%;
+  height: 220px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ── FORM COLUMN ── */
+.contact-form-heading {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 2rem;
+}
+.contact-form-heading .gold { color: var(--gold); }
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+.contact-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.contact-form-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  display: block;
+}
+.contact-input,
+.contact-select,
+.contact-textarea {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.92rem;
+  color: var(--text);
+  background: var(--bg-card);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  -webkit-appearance: none;
+}
+.contact-input:focus,
+.contact-select:focus,
+.contact-textarea:focus {
+  border-color: var(--gold-dim);
+  box-shadow: 0 0 0 3px var(--gold-glow);
+}
+.contact-textarea { resize: vertical; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .contact-layout { grid-template-columns: 1fr; gap: 3rem; }
+}
+@media (max-width: 640px) {
+  .contact-layout { gap: 2.5rem; }
+  .contact-details { gap: 1.2rem; }
+}
