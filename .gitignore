@@ -17,5 +17,3 @@ db.sqlite3
 # Media uploads
 media/
 
-# Static files (collected)
-staticfiles/
