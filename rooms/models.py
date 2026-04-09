@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.core.exceptions import ValidationError
+from datetime import datetime, timedelta, time
 
 
 class RoomType(models.Model):
@@ -63,7 +64,11 @@ class Booking(models.Model):
             if overlapping.exists():
                 raise ValidationError("This room is already booked for the selected dates.")
 
-    def save(self, *args, **kwargs):  # ← indented inside class
+    def save(self, *args, **kwargs):  
+        if self.check_in:
+            self.check_in = datetime.combine(self.check_in.date(), time(12, 0))
+        if self.check_in:
+            self.check_out = self.check_in + timedelta(days=1)
         if self.check_in and self.check_out and self.room_id:
             nights = (self.check_out - self.check_in).days
             self.total_price = nights * self.room.price

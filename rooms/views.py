@@ -8,6 +8,7 @@ from django.utils import timezone
 from django.db.models import Sum, Count
 from .models import Room, Booking, GalleryImage, Testimonial
 from .forms import BookingForm, RoomForm, GalleryImageForm, TestimonialForm
+from rooms.emails import email_admin_new_booking, email_user_booking_confirmed, email_user_booking_cancelled
 import requests
 import hmac
 import hashlib
@@ -101,6 +102,7 @@ def book_room(request, pk):
             # Save booking as pending (not confirmed yet)
             booking.total_price = total_price
             booking.save()
+            email_admin_new_booking(booking)
 
             # Initialize Paystack transaction
             amount_kobo = int(total_price * 100)  # Paystack uses kobo
@@ -242,6 +244,14 @@ def dashboard_booking_update(request, pk):
         booking.status = 'cancelled'
         messages.success(request, f'Booking #{pk} cancelled.')
     booking.save()
+    if action == 'confirm':
+        booking.status = 'confirmed'
+        booking.save()
+        email_user_booking_confirmed(booking)
+    elif action == 'cancel':
+        booking.status = 'cancelled'
+        booking.save()
+        email_user_booking_cancelled(booking)
     return redirect('dashboard_bookings')
 
 

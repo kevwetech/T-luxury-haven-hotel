@@ -1,25 +1,65 @@
 {% extends 'base.html' %}
-{% block title %}Login — T-Luxury Haven Hotel{% endblock %}
+{% load static %}
+{% block title %}Log In — T-Luxury Haven{% endblock %}
 
-{% block content %}
-<div class="form-wrap">
-  <div class="form-header">
-    <span class="section-label">Welcome Back</span>
-    <h1>Sign In</h1>
-  </div>
-  <form method="POST" class="booking-form">
-    {% csrf_token %}
-    {% for field in form %}
-      <div class="form-group">
-        <label>{{ field.label }}</label>
-        {{ field }}
-        {% if field.errors %}
-          <span class="field-error">{{ field.errors|join:", " }}</span>
-        {% endif %}
+{% block full_content %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}" />
+
+<div class="auth-wrap">
+  <div class="auth-card">
+
+    <div class="auth-card-top">
+      <span class="auth-card-icon">🏨</span>
+      <h1 class="auth-card-title">Welcome <span class="gold">Back</span></h1>
+      <p class="auth-card-sub">Log in to manage your bookings and account.</p>
+    </div>
+
+    <div class="auth-card-body">
+
+      {% for message in messages %}
+        <div class="auth-alert {% if 'success' in message.tags %}auth-alert-success{% else %}auth-alert-error{% endif %}">
+          {{ message }}
+        </div>
+      {% endfor %}
+
+      <form class="auth-form" method="POST">
+        {% csrf_token %}
+
+        <div class="auth-form-group">
+          <label class="auth-form-label">Username</label>
+          <input class="auth-input" type="text" name="username"
+            placeholder="Enter your username" required autofocus
+            value="{{ form.data.username|default:'' }}" />
+        </div>
+
+        <div class="auth-form-group">
+          <label class="auth-form-label">Password</label>
+          <input class="auth-input" type="password" name="password"
+            placeholder="Enter your password" required />
+        </div>
+
+        <!-- Remember Me + Forgot Password row -->
+        <div class="auth-form-extra">
+          <label class="auth-remember">
+            <input type="checkbox" name="remember_me" id="rememberMe"
+              {% if form.data.remember_me %}checked{% endif %} />
+            <span class="auth-remember-box"></span>
+            Remember me
+          </label>
+          <a href="{% url 'forgot_password' %}" class="auth-forgot">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="btn-primary" style="margin-top:0.5rem;">
+          Log In →
+        </button>
+      </form>
+
+      <div class="auth-bottom">
+        Don't have an account? <a href="{% url 'register' %}">Sign Up →</a>
       </div>
-    {% endfor %}
-    <button type="submit" class="btn-primary btn-full">Sign In →</button>
-  </form>
-  <p class="form-footer">New to T-Luxury Haven? <a href="{% url 'register' %}">Create an account</a></p>
+
+    </div>
+  </div>
 </div>
+
 {% endblock %}

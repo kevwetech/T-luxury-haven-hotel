@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Verify Your Email — T-Luxury Haven{% endblock %}
+
+{% block full_content %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}" />
+
+<div class="auth-wrap">
+  <div class="auth-card">
+
+    <div class="auth-card-top">
+      <span class="auth-card-icon">✉</span>
+      <h1 class="auth-card-title">Check Your <span class="gold">Email</span></h1>
+      <p class="auth-card-sub">
+        We've sent a verification link to your email address. Please check your inbox and click the link to activate your account.
+      </p>
+    </div>
+
+    <div class="auth-card-body">
+
+      {% for message in messages %}
+        <div class="auth-alert {% if 'success' in message.tags %}auth-alert-success{% else %}auth-alert-error{% endif %}">
+          {{ message }}
+        </div>
+      {% endfor %}
+
+      <div class="verify-steps">
+        <div class="verify-step">
+          <div class="verify-step-num">1</div>
+          <p class="verify-step-text">
+            Open your email inbox and look for a message from <strong>T-Luxury Haven</strong>.
+          </p>
+        </div>
+        <div class="verify-step">
+          <div class="verify-step-num">2</div>
+          <p class="verify-step-text">
+            Click the <strong>verification link</strong> inside the email.
+          </p>
+        </div>
+        <div class="verify-step">
+          <div class="verify-step-num">3</div>
+          <p class="verify-step-text">
+            You'll be automatically logged in and redirected to the homepage.
+          </p>
+        </div>
+      </div>
+
+      <div class="verify-resend">
+        <p>Didn't receive the email? Check your spam folder or request a new one.</p>
+        <form method="POST" action="{% url 'resend_verification' %}">
+          {% csrf_token %}
+          <input type="hidden" name="username" value="{{ username }}" />
+          <button type="submit" class="btn-primary" style="width:100%;">
+            Resend Verification Email
+          </button>
+        </form>
+      </div>
+
+      <div class="auth-bottom" style="margin-top:1.2rem;">
+        Already verified? <a href="{% url 'login' %}">Log In →</a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

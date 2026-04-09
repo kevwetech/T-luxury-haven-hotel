@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = config('DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*').split(',')
 
@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'cloudinary',
     'django.contrib.humanize',
 
-    
+
     'rooms',
     'accounts',
 ]
@@ -154,7 +154,9 @@ STATICFILES_STORAGE = 'whitenoise.storage.StaticFilesStorage'
 
 EMAIL_BACKEND = 'sendgrid_backend.SendgridBackend'
 SENDGRID_API_KEY = config('SENDGRID_API_KEY')
+SENDGRID_SANDBOX_MODE_IN_DEBUG = False
 DEFAULT_FROM_EMAIL = 'T-Luxury Haven <tluxuryhaven@gmail.com>'
+SITE_URL    = 'https://t-luxury-haven-hotel-production.up.railway.app/'
 
 
 PAYSTACK_PUBLIC_KEY = config('PAYSTACK_PUBLIC_KEY')

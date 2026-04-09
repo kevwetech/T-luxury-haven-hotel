@@ -27,6 +27,10 @@
       <a href="{% url 'profile' %}" class="profile-nav-link active">
         <span class="profile-nav-icon">👤</span> Account Details
       </a>
+      <a href="{% url 'change_password' %}" class="profile-nav-link">
+        <span class="profile-nav-icon">🔑</span> Change Password
+      </a>
+      
       <a href="{% url 'my_bookings' %}" class="profile-nav-link">
         <span class="profile-nav-icon">📋</span> My Bookings
       </a>
@@ -47,26 +51,50 @@
 
     <!-- Booking Stats -->
     <div class="profile-card">
-      <div class="profile-card-header">
-        <h2 class="profile-card-title">Booking Summary</h2>
+  <div class="profile-card-header">
+    <h2 class="profile-card-title">Booking Summary</h2>
+  </div>
+
+  <div class="profile-card-body">
+
+    {% if total_bookings == 0 %}
+      <!-- EMPTY STATE -->
+      <div class="empty-state">
+        <p class="empty-title">Your first luxury stay is waiting ✨</p>
+        <p class="empty-sub">
+          Explore premium rooms and enjoy a comfortable experience.
+        </p>
+        <a href="{% url 'rooms' %}" class="btn-primary">
+          Browse Rooms →
+        </a>
       </div>
-      <div class="profile-card-body">
-        <div class="profile-stats">
-          <div class="profile-stat">
-            <div class="profile-stat-val">{{ total_bookings }}</div>
-            <div class="profile-stat-lbl">Total Bookings</div>
-          </div>
-          <div class="profile-stat">
-            <div class="profile-stat-val">{{ confirmed_bookings }}</div>
-            <div class="profile-stat-lbl">Confirmed</div>
-          </div>
-          <div class="profile-stat">
-            <div class="profile-stat-val">${{ total_spent|floatformat:0 }}</div>
-            <div class="profile-stat-lbl">Total Spent</div>
-          </div>
+
+    {% else %}
+      <!-- NORMAL STATE -->
+      <div class="profile-stats">
+        
+        <div class="profile-stat">
+          <div class="profile-stat-val">{{ total_bookings }}</div>
+          <div class="profile-stat-lbl">Total Bookings</div>
         </div>
+
+        <div class="profile-stat">
+          <div class="profile-stat-val">{{ confirmed_bookings }}</div>
+          <div class="profile-stat-lbl">Confirmed</div>
+        </div>
+
+        {% if total_spent > 0 %}
+        <div class="profile-stat">
+          <div class="profile-stat-val">₦{{ total_spent|floatformat:0 }}</div>
+          <div class="profile-stat-lbl">Total Spent</div>
+        </div>
+        {% endif %}
+
       </div>
-    </div>
+    {% endif %}
+
+  </div>
+</div>
 
     <!-- Edit Profile -->
     <div class="profile-card">
@@ -128,9 +156,9 @@
               {% for booking in recent_bookings %}
               <tr>
                 <td class="pt-bold">{{ booking.room.room_type }} — #{{ booking.room.room_number }}</td>
-                <td>{{ booking.check_in }}</td>
-                <td>{{ booking.check_out }}</td>
-                <td class="pt-gold">${{ booking.total_price }}</td>
+                <td>{{ booking.check_in|date:"M d, Y" }} at 12:00 PM</td>
+                <td>{{ booking.check_out|date:"M d, Y" }} at 12:00 PM</td>
+                <td class="pt-gold">₦{{ booking.total_price }}</td>
                 <td>
                   <span class="pt-badge pt-{{ booking.status }}">{{ booking.status|capfirst }}</span>
                 </td>
