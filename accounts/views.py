@@ -1,43 +1,24 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, update_session_auth_hash
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.core.mail import send_mail
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.conf import settings
 from django.db.models import Sum
 from rooms.tokens import email_token
-from accounts.forms import CustomUserCreationForm
+from accounts.forms import CustomUserCreationForm, EmailAuthenticationForm
 from rooms.models import Booking
+from accounts.email_utils import (
+    send_email,
+    send_verification_email,
+    send_password_reset_email,
+    send_password_changed_email,
+)
 
-# We reuse Django's PasswordResetTokenGenerator for password reset
+# Django's built-in token generator for password reset
 from django.contrib.auth.tokens import default_token_generator as reset_token
-
-
-# ── HELPERS ──────────────────────────────────────────────
-
-def send_verification_email(request, user):
-    uid        = urlsafe_base64_encode(force_bytes(user.pk))
-    token      = email_token.make_token(user)
-    verify_url = request.build_absolute_uri(f'/accounts/verify/{uid}/{token}/')
-    send_mail(
-        subject='Verify your T-Luxury Haven account',
-        message=(
-            f'Hi {user.username},\n\n'
-            f'Welcome to T-Luxury Haven Hotel!\n\n'
-            f'Click the link below to verify your email:\n\n'
-            f'{verify_url}\n\n'
-            f'This link expires in 24 hours.\n\n'
-            f'If you did not create this account, ignore this email.\n\n'
-            f'— T-Luxury Haven Hotel'
-        ),
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        recipient_list=[user.email],
-        fail_silently=False,
-    )
 
 
 # ── REGISTER ─────────────────────────────────────────────
@@ -54,8 +35,8 @@ def register(request):
             try:
                 send_verification_email(request, user)
                 messages.success(request, 'Account created! Please check your email to verify.')
-            except Exception:
-                messages.warning(request, 'Account created but verification email failed. Contact support.')
+            except Exception as e:
+                messages.warning(request, f'Account created but verification email failed: {e}')
             return redirect('verify_email_notice')
     else:
         form = CustomUserCreationForm()
@@ -96,37 +77,36 @@ def resend_verification(request):
             messages.success(request, 'Verification email resent! Check your inbox.')
         except User.DoesNotExist:
             messages.error(request, 'No unverified account found.')
-        except Exception:
-            messages.error(request, 'Could not send email. Try again later.')
+        except Exception as e:
+            messages.error(request, f'Could not send email: {e}')
     return redirect('verify_email_notice')
 
 
 # ── LOGIN / LOGOUT ────────────────────────────────────────
 
+
 def login_view(request):
     if request.method == 'POST':
-        form        = AuthenticationForm(data=request.POST)
+        form        = EmailAuthenticationForm(data=request.POST)
         remember_me = request.POST.get('remember_me')
-
+        
         if form.is_valid():
+            
             user = form.get_user()
-            if not user.is_active:
-                messages.error(request, 'Please verify your email before logging in.')
-                return redirect('verify_email_notice')
-
             login(request, user)
-
-            # Remember me — extend session to 2 weeks, else expire on browser close
+            
             if remember_me:
                 request.session.set_expiry(60 * 60 * 24 * 14)  # 14 days
+                
             else:
-                request.session.set_expiry(0)  # expires when browser closes
-
+                request.session.set_expiry(0)  # expires on browser close
             return redirect(request.GET.get('next', 'home'))
+            
         else:
-            messages.error(request, 'Invalid username or password.')
+            messages.error(request, 'Invalid email or password.')
+            
     else:
-        form = AuthenticationForm()
+        form = EmailAuthenticationForm()
     return render(request, 'accounts/login.html', {'form': form})
 
 
@@ -142,32 +122,14 @@ def forgot_password(request):
     sent = False
     if request.method == 'POST':
         email = request.POST.get('email', '').strip()
-        # Always show success to avoid user enumeration
-        sent = True
+        sent  = True  # always show success to prevent email enumeration
         try:
             user = User.objects.get(email=email, is_active=True)
-            uid   = urlsafe_base64_encode(force_bytes(user.pk))
-            token = reset_token.make_token(user)
-            reset_url = request.build_absolute_uri(
-                f'/accounts/reset-password/{uid}/{token}/'
-            )
-            send_mail(
-                subject='Reset your T-Luxury Haven password',
-                message=(
-                    f'Hi {user.username},\n\n'
-                    f'You requested a password reset for your T-Luxury Haven account.\n\n'
-                    f'Click the link below to reset your password:\n\n'
-                    f'{reset_url}\n\n'
-                    f'This link expires in 1 hour.\n\n'
-                    f'If you did not request this, ignore this email — your password will not change.\n\n'
-                    f'— T-Luxury Haven Hotel'
-                ),
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[email],
-                fail_silently=True,
-            )
+            send_password_reset_email(request, user)
         except User.DoesNotExist:
-            pass  # Don't reveal if email exists
+            pass  # don't reveal if email exists
+        except Exception as e:
+            print(f'Password reset email error: {e}')
 
     return render(request, 'accounts/forgot_password.html', {'sent': sent})
 
@@ -175,7 +137,6 @@ def forgot_password(request):
 # ── RESET PASSWORD ────────────────────────────────────────
 
 def reset_password(request, uidb64, token):
-    # Validate the token first
     try:
         uid  = force_str(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
@@ -203,20 +164,20 @@ def reset_password(request, uidb64, token):
             user.set_password(new1)
             user.save()
             success = True
-
-            # Notify user by email
-            send_mail(
-                subject='Your T-Luxury Haven password was reset',
-                message=(
-                    f'Hi {user.username},\n\n'
-                    f'Your password was successfully reset.\n\n'
-                    f'If you did not do this, contact us immediately at {settings.DEFAULT_FROM_EMAIL}.\n\n'
-                    f'— T-Luxury Haven Hotel'
-                ),
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[user.email],
-                fail_silently=True,
-            )
+            try:
+                send_email(
+                    to_email = user.email,
+                    subject  = 'Your T-Luxury Haven password was reset',
+                    body     = (
+                        f'Hi {user.username},\n\n'
+                        f'Your password was successfully reset.\n\n'
+                        f'If you did not do this, contact us immediately at '
+                        f'{settings.DEFAULT_FROM_EMAIL}.\n\n'
+                        f'— T-Luxury Haven Hotel'
+                    ),
+                )
+            except Exception:
+                pass
 
     return render(request, 'accounts/reset_password.html', {
         'uidb64':  uidb64,
@@ -279,18 +240,10 @@ def change_password(request):
             request.user.save()
             update_session_auth_hash(request, request.user)
             success = True
-            send_mail(
-                subject='Your T-Luxury Haven password was changed',
-                message=(
-                    f'Hi {request.user.username},\n\n'
-                    f'Your password was recently changed.\n\n'
-                    f'If you did not do this, contact us at {settings.DEFAULT_FROM_EMAIL}.\n\n'
-                    f'— T-Luxury Haven Hotel'
-                ),
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[request.user.email],
-                fail_silently=True,
-            )
+            try:
+                send_password_changed_email(request.user)
+            except Exception:
+                pass
         else:
             messages.error(request, 'Please fix the errors below.')
 
