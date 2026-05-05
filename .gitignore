@@ -1,19 +1,46 @@
-# Created by venv; see https://docs.python.org/3/library/venv.html
-
-# Environment
+# =========================
+# ENVIRONMENT & SECRETS
+# =========================
 .env
 
-# Virtual environment
+# =========================
+# VIRTUAL ENVIRONMENTS
+# =========================
 t-luxury/
+venv/
+virtualenv/
 
-# Python
+# =========================
+# PYTHON CACHE
+# =========================
 __pycache__/
 *.pyc
 *.pyo
 
-# Database
+# =========================
+# DATABASE
+# =========================
 db.sqlite3
 
-# Media uploads
+# =========================
+# DJANGO FILES
+# =========================
+staticfiles/
 media/
 
+# =========================
+# LOGS
+# =========================
+*.log
+stderr.log
+
+# =========================
+# ARCHIVES / BACKUPS
+# =========================
+*.zip
+
+# =========================
+# OS FILES (WINDOWS / MAC)
+# =========================
+Thumbs.db
+.DS_Store
